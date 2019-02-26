@@ -1,0 +1,2 @@
+mine.update:
+  module.run
