@@ -14,7 +14,7 @@
 
 ### How do I get set up? ###
 
-Download the Vertica CE software and put it in **salt/setups/vertica/cluster/packages** folder renaming it in **vertica.rpm**.
+Download the Vertica CE software and put it in **salt/setups/vertica/packages** folder renaming it in **vertica.rpm**.
 
 Then run:
 ```bash
