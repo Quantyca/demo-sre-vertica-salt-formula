@@ -1,3 +1,4 @@
+{% set rpm_path = pillar['rpm_path'] %}
 {% set vertica_user = salt['pillar.get']('vertica_user', 'dbadmin') %}
 {% set vertica_group = salt['pillar.get']('vertica_group', 'verticadba') %}
 {% set tech_user = salt['pillar.get']('tech_user', 'tech_user') %}
@@ -19,7 +20,7 @@ install_vertica_rpm:
   pkg.installed:
     - name: vertica
     - sources:
-      - vertica: salt://setups/vertica/packages/vertica.rpm
+      - vertica: {{ rpm_path }}
 
 #3 - Installazione vertica
 #
@@ -33,14 +34,20 @@ install_vertica_app:
 {% endif %}
     - use_vt: True
     - runas: {{ tech_user }}
+    - require:
+      - pkg: install_vertica_rpm
 
 Create Database:
   cmd.run:
     - name: su - dbadmin -c "/opt/vertica/bin/admintools -t create_db -d vertica -p 'Vertica123!' -s {{ ','.join(flat_list |sort) }}"
+    - require:
+      - cmd: install_vertica_app
 
 Set restart policy to always:
   cmd.run:
     - name: su - dbadmin -c "/opt/vertica/bin/admintools -t set_restart_policy -d vertica -p always"
+    - require:
+      - cmd: Create Database
 
 Set grain for vertica_installed:
   grains.present:
