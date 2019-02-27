@@ -7,7 +7,6 @@
 {% set vertica_user_home = salt['pillar.get']('vertica_user_home', '/home/' + vertica_user) %}
 {% set tech_user = salt['pillar.get']('tech_user', 'tech_user') %}
 {% set tech_user_home = salt['pillar.get']('tech_user_home', '/home/' + tech_user) %}
-{% set rpm_path = salt['pillar.get']('rpm_path', 'salt://setups/vertica/packages/vertica.rpm') %}
 
 #1
 Check Requirements:

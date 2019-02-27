@@ -1,4 +1,3 @@
-{% set rpm_path = pillar['rpm_path'] %}
 {% set vertica_user = salt['pillar.get']('vertica_user', 'dbadmin') %}
 {% set vertica_group = salt['pillar.get']('vertica_group', 'verticadba') %}
 {% set tech_user = salt['pillar.get']('tech_user', 'tech_user') %}
@@ -20,7 +19,7 @@ install_vertica_rpm:
   pkg.installed:
     - name: vertica
     - sources:
-      - vertica: {{ rpm_path }}
+      - vertica: salt://setups/vertica/packages/vertica.rpm
 
 #3 - Installazione vertica
 #

@@ -21,6 +21,12 @@ Then run:
 vagrant up
 ```
 
+If something goes wrong (sometimes minions are not ready), you can run again Salt procedure without destroy the instance, doing:
+
+```bash
+vagrant provision
+```
+
 At the end of the bootstrap you can connect to the cluster via Sql Client, e.g [DBeaver](https://dbeaver.io/download/):
 
 * JDBC Connection: jdbc:vertica://192.168.99.3:5433/vertica
