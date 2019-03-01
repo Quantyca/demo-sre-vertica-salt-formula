@@ -19,8 +19,6 @@ Vagrant.configure("2") do |config|
     vertica01.vm.synced_folder "./salt", "/srv/salt/"
     vertica01.vm.synced_folder '.', '/vagrant', disabled: true
     vertica01.vm.provision :salt do |salt|
-        #salt.install_type = "git"
-        #salt.version = "2018.3.4"
         salt.minion_config = "salt/minion1"
         salt.minion_id = vertica01
         salt.masterless = true
@@ -44,8 +42,6 @@ Vagrant.configure("2") do |config|
     vertica02.vm.synced_folder "./salt", "/srv/salt/"
     vertica02.vm.synced_folder '.', '/vagrant', disabled: true
     vertica02.vm.provision :salt do |salt|
-        #salt.install_type = "git"
-        #salt.version = "2018.3.4"
         salt.minion_config = "salt/minion2"
         salt.minion_id = vertica02
         salt.masterless = true
@@ -70,8 +66,6 @@ Vagrant.configure("2") do |config|
     vertica03.vm.synced_folder "./pillar", "/srv/pillar/"
     vertica03.vm.synced_folder '.', '/vagrant', disabled: true
     vertica03.vm.provision :salt do |salt|
-        #salt.install_type = "git"
-        #salt.version = "2018.3.4"
         salt.minion_config = "salt/minion3"
         salt.master_config = "salt/master"
         salt.minion_id = vertica03
@@ -86,8 +80,6 @@ Vagrant.configure("2") do |config|
         salt.run_highstate = false
     end
     vertica03.vm.provision :salt do |salt|
-        #salt.install_type = "git"
-        #salt.version = "2018.3.4"
         salt.minion_config = "salt/minion3"
         salt.master_config = "salt/master"
         salt.minion_id = vertica03
