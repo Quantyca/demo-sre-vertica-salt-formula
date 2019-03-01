@@ -83,13 +83,22 @@ Check for data dir:
         vertica_user_home: {{ vertica_user_home }}
 
 #6
+Create Vertica Database:
+  salt.state:
+    - sls: setups.vertica.cluster.9_1_0-0.orchestration.create_database
+    - tgt: 'roles:vertica_init'
+    - tgt_type: grain
+    - require:
+      - salt: Check for data dir
+
+#7
 Cleanup:
   salt.state:
     - sls: setups.vertica.cluster.9_1_0-0.orchestration.cleanup
     - tgt: 'roles:vertica_*'
     - tgt_type: grain
     - require:
-      - salt: Check for data dir
+      - salt: Create Vertica Database
     - pillar:
         data_dir: {{ data_dir }}
         tech_user: {{ tech_user }}

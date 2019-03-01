@@ -36,18 +36,6 @@ install_vertica_app:
     - require:
       - pkg: install_vertica_rpm
 
-Create Database:
-  cmd.run:
-    - name: su - dbadmin -c "/opt/vertica/bin/admintools -t create_db -d vertica -p 'Vertica123!' -s {{ ','.join(flat_list |sort) }}"
-    - require:
-      - cmd: install_vertica_app
-
-Set restart policy to always:
-  cmd.run:
-    - name: su - dbadmin -c "/opt/vertica/bin/admintools -t set_restart_policy -d vertica -p always"
-    - require:
-      - cmd: Create Database
-
 Set grain for vertica_installed:
   grains.present:
     - name: vertica_installed
@@ -55,4 +43,11 @@ Set grain for vertica_installed:
     - parallel: True
     - require:
       - cmd: '*'
+{% else %}
+Step vertica_installed already done:
+  test.configurable_test_state:
+    - name: Step vertica_installed already done
+    - changes: False
+    - result: True
+    - comment: Step vertica_installed already done
 {% endif %}
