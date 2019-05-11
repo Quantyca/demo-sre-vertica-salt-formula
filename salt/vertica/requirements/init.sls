@@ -2,6 +2,8 @@
 {% from "vertica/map.jinja" import requirements with context %}
 {% from "vertica/map.jinja" import tech_user with context %}
 {% from "vertica/map.jinja" import tech_user_home with context %}
+{% from "vertica/map.jinja" import dev with context %}
+{% from "vertica/map.jinja" import fstype with context %}
 
 #1 - Verifica e Installazione prerequisiti
 #
@@ -45,13 +47,13 @@ echo Swap Size OK, {{ specs['size'] }}:
 {% endfor %}
 
 #1.6
-{% if not salt['disk.dump'](requirements.dev)['getra'] | int > 4095 %}
+{% if not salt['disk.dump'](dev)['getra'] | int > 4095 %}
 Set Disk Read Ahead:
   blockdev.tuned:
-    - name: {{ requirements.dev }}
+    - name: {{ dev }}
     - read-ahead: 4096
 {% else %}
-echo Read ahead OK, {{ salt['disk.dump'](requirements.dev)['getra'] }}:
+echo Read ahead OK, {{ salt['disk.dump'](dev)['getra'] }}:
   cmd.run
 {% endif %}
 
@@ -88,11 +90,11 @@ Check if rc.local file has requirements:
     - text: |
         # Added by Salt
         # I/O Scheduler
-        {%- if 'mapper' in requirements.dev %}
-        {%- set dev_for_scheduler = salt['cmd.run']("lsblk | grep -B 1 "+ requirements.dev.split('/')[-1] +" | head -1 | awk '{print $1}' | sed 's/[0-9]*//g'", python_shell=True) %}
+        {%- if 'mapper' in dev %}
+        {%- set dev_for_scheduler = salt['cmd.run']("lsblk | grep -B 1 "+ dev.split('/')[-1] +" | head -1 | awk '{print $1}' | sed 's/[0-9]*//g'", python_shell=True) %}
         echo deadline > /sys/block/{{ dev_for_scheduler|replace('-', '')|replace('`','') }}/queue/scheduler
         {%- else %}
-        echo deadline > /sys/block/{{ requirements.dev.split('/')[-1].strip('0123456789 ') }}/queue/scheduler
+        echo deadline > /sys/block/{{ dev.split('/')[-1].strip('0123456789 ') }}/queue/scheduler
         {%- endif %}
 
         {%- if grains['osmajorrelease'] == 7 %}

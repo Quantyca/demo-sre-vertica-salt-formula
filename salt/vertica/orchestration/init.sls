@@ -6,11 +6,13 @@
 {% from "vertica/map.jinja" import vertica_user_home with context %}
 {% from "vertica/map.jinja" import tech_user with context %}
 {% from "vertica/map.jinja" import tech_user_home with context %}
+{% from "vertica/map.jinja" import vertica_db with context %}
+{% from "vertica/map.jinja" import dev with context %}
 
 #1
 Check Requirements:
   salt.state:
-    - sls: setups.vertica.requirements
+    - sls: vertica.requirements
     - tgt: 'roles:vertica_*'
     - tgt_type: grain
     - pillar:
@@ -21,7 +23,7 @@ Check Requirements:
 #2
 generate_ssh_key:
   salt.state:
-    - sls: setups.vertica.requirements.generate_ssh_key
+    - sls: vertica.requirements.generate_ssh_key
     - tgt: 'roles:vertica_init'
     - tgt_type: grain
     - require:
@@ -32,7 +34,7 @@ generate_ssh_key:
 
 Refresh Mine functions:
     salt.state:
-    - sls: setups.vertica.requirements.mine_refresh
+    - sls: vertica.requirements.mine_refresh
     - tgt: 'roles:vertica_*'
     - tgt_type: grain
     - require:
@@ -41,7 +43,7 @@ Refresh Mine functions:
 #3
 Propagate ssh-key on all host for passwordless setup:
   salt.state:
-    - sls: setups.vertica.requirements.propagate_ssh_key
+    - sls: vertica.requirements.propagate_ssh_key
     - tgt: 'roles:vertica_node'
     - tgt_type: grain
     - require:
@@ -53,7 +55,7 @@ Propagate ssh-key on all host for passwordless setup:
 #4
 Install Vertica from one node and propagate it on all nodes:
   salt.state:
-    - sls: setups.vertica.orchestration.install_vertica
+    - sls: vertica.orchestration.install_vertica
     - tgt: 'roles:vertica_init'
     - tgt_type: grain
     - require:
@@ -71,7 +73,7 @@ Install Vertica from one node and propagate it on all nodes:
 #5
 Check for data dir:
   salt.state:
-    - sls: setups.vertica.orchestration.check_data_dir
+    - sls: vertica.orchestration.check_data_dir
     - tgt: 'roles:vertica_*'
     - tgt_type: grain
     - require:
@@ -84,7 +86,7 @@ Check for data dir:
 #6
 Create Vertica Database:
   salt.state:
-    - sls: setups.vertica.orchestration.create_database
+    - sls: vertica.orchestration.create_database
     - tgt: 'roles:vertica_init'
     - tgt_type: grain
     - pillar:
@@ -97,7 +99,7 @@ Create Vertica Database:
 #7
 Cleanup:
   salt.state:
-    - sls: setups.vertica.orchestration.cleanup
+    - sls: vertica.orchestration.cleanup
     - tgt: 'roles:vertica_*'
     - tgt_type: grain
     - require:
