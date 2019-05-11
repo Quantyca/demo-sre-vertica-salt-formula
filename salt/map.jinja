@@ -1,0 +1,61 @@
+{% set pkgs = salt['grains.filter_by']({
+    'default': [
+          - 'openssh'
+          - 'bash'
+          - 'sudo'
+          - 'policycoreutils-python'
+          - 'selinux-policy-targeted'
+          - 'tuned'
+          - 'mcelog'
+          - 'sysstat'
+          - 'dialog'
+          - 'gdb'
+      ],
+    '7': [
+          - 'openssh'
+          - 'bash'
+          - 'sudo'
+          - 'policycoreutils-python'
+          - 'selinux-policy-targeted'
+          - 'tuned'
+          - 'mcelog'
+          - 'sysstat'
+          - 'dialog'
+          - 'gdb'
+          - 'chrony'
+          - 'gdb'
+    ],
+    '6': [
+          - 'openssh'
+          - 'bash'
+          - 'sudo'
+          - 'policycoreutils-python'
+          - 'selinux-policy-targeted'
+          - 'tuned'
+          - 'mcelog'
+          - 'sysstat'
+          - 'dialog'
+          - 'gdb'
+          - 'ntp'
+    ],
+},
+grain='osmajorrelease', base='default') %}
+
+{% set requirements = {
+      'timezone': salt['pillar.get']('timezone', 'Europe/Rome'),
+      'dev': pillar['dev'],
+      'fstype': salt['disk.fstype'](dev)
+    }
+%}
+
+{% set tech_user = salt['pillar.get']('tech_user', 'tech_user') %}
+{% set tech_user_home = salt['pillar.get']('tech_user_home', '/home/' + tech_user) %}
+
+{% set options = salt['pillar.get']('options', ' ') %}
+{% set data_dir = salt['pillar.get']('data_dir', '/home/dbadmin/data') %}
+{% set dbadmin_passwd = salt['pillar.get']('dbadmin_passwd', 'Vertica!') %}
+{% set vertica_db = salt['pillar.get']('vertica_db', 'vertica') %}
+{% set vertica_user = salt['pillar.get']('vertica_user', 'dbadmin') %}
+{% set vertica_group = salt['pillar.get']('vertica_group', 'verticadba') %}
+{% set vertica_user_home = salt['pillar.get']('vertica_user_home', '/home/' + vertica_user) %}
+{% set vertica_rpm = 'salt://vertica/packages/vertica.rpm' %}

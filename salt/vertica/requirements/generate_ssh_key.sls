@@ -1,5 +1,5 @@
-{% set tech_user = salt['pillar.get']('tech_user', 'tech_user') %}
-{% set tech_user_home = salt['pillar.get']('tech_user_home', '/home/' + tech_user) %}
+{% from "vertica/map.jinja" import tech_user with context %}
+{% from "vertica/map.jinja" import tech_user_home with context %}
 
 Generate_ssh_key on vertica init:
   cmd.run:

@@ -19,15 +19,15 @@ Vagrant.configure("2") do |config|
     vertica01.vm.synced_folder "./salt", "/srv/salt/"
     vertica01.vm.synced_folder '.', '/vagrant', disabled: true
     vertica01.vm.provision :salt do |salt|
-        salt.minion_config = "salt/minion1"
+        salt.minion_config = "vagrant/config/minion1"
         salt.minion_id = vertica01
         salt.masterless = true
         salt.run_highstate = false
         salt.verbose = true
         salt.colorize = true
         salt.log_level = "info"
-        salt.minion_key = "salt/key/vertica01.pem"
-        salt.minion_pub = "salt/key/vertica01.pub"
+        salt.minion_key = "vagrant/pki/vertica01.pem"
+        salt.minion_pub = "vagrant/pki/vertica01.pub"
     end
   end
 
@@ -42,15 +42,15 @@ Vagrant.configure("2") do |config|
     vertica02.vm.synced_folder "./salt", "/srv/salt/"
     vertica02.vm.synced_folder '.', '/vagrant', disabled: true
     vertica02.vm.provision :salt do |salt|
-        salt.minion_config = "salt/minion2"
+        salt.minion_config = "vagrant/config/minion2"
         salt.minion_id = vertica02
         salt.masterless = true
         salt.run_highstate = false
         salt.verbose = true
         salt.colorize = true
         salt.log_level = "info"
-        salt.minion_key = "salt/key/vertica02.pem"
-        salt.minion_pub = "salt/key/vertica02.pub"
+        salt.minion_key = "vagrant/pki/vertica02.pem"
+        salt.minion_pub = "vagrant/pki/vertica02.pub"
     end
   end
 
@@ -66,37 +66,37 @@ Vagrant.configure("2") do |config|
     vertica03.vm.synced_folder "./pillar", "/srv/pillar/"
     vertica03.vm.synced_folder '.', '/vagrant', disabled: true
     vertica03.vm.provision :salt do |salt|
-        salt.minion_config = "salt/minion3"
-        salt.master_config = "salt/master"
+        salt.minion_config = "vagrant/config/minion3"
+        salt.master_config = "vagrant/config/master"
         salt.minion_id = vertica03
         salt.install_master = true
         salt.verbose = true
         salt.colorize = true
         salt.log_level = "info"
-        salt.master_key = "salt/key/master.pem"
-        salt.master_pub = "salt/key/master.pub"
-        salt.minion_key = "salt/key/vertica03.pem"
-        salt.minion_pub = "salt/key/vertica03.pub"
+        salt.master_key = "vagrant/pki/master.pem"
+        salt.master_pub = "vagrant/pki/master.pub"
+        salt.minion_key = "vagrant/pki/vertica03.pem"
+        salt.minion_pub = "vagrant/pki/vertica03.pub"
         salt.run_highstate = false
     end
     vertica03.vm.provision :salt do |salt|
-        salt.minion_config = "salt/minion3"
-        salt.master_config = "salt/master"
+        salt.minion_config = "vagrant/config/minion3"
+        salt.master_config = "vagrant/config/master"
         salt.minion_id = vertica03
         salt.install_master = true
-        salt.orchestrations = ['setups.vertica.cluster.9_1_0-0.orchestration']
+        salt.orchestrations = ['vertica.orchestration']
         salt.verbose = true
         salt.colorize = true
         salt.log_level = "info"
-        salt.master_key = "salt/key/master.pem"
-        salt.master_pub = "salt/key/master.pub"
-        salt.minion_key = "salt/key/vertica03.pem"
-        salt.minion_pub = "salt/key/vertica03.pub"
+        salt.master_key = "vagrant/pki/master.pem"
+        salt.master_pub = "vagrant/pki/master.pub"
+        salt.minion_key = "vagrant/pki/vertica03.pem"
+        salt.minion_pub = "vagrant/pki/vertica03.pub"
         salt.pillar({
           "dev" => "/dev/sda1"
           }
         )
-        salt.seed_master = {"vertica01": "salt/key/vertica01.pub", "vertica02": "salt/key/vertica02.pub", "vertica03": "salt/key/vertica03.pub"}
+        salt.seed_master = {"vertica01": "vagrant/pki/vertica01.pub", "vertica02": "vagrant/pki/vertica02.pub", "vertica03": "vagrant/pki/vertica03.pub"}
     end
   end
 end

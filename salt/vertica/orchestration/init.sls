@@ -1,17 +1,16 @@
-{% set options = salt['pillar.get']('options', ' ') %}
-{% set data_dir = salt['pillar.get']('data_dir', '/home/dbadmin/data') %}
-{% set dbadmin_passwd = salt['pillar.get']('dbadmin_passwd', 'Vertica!') %}
-{% set dev = pillar['dev'] %}
-{% set vertica_user = salt['pillar.get']('vertica_user', 'dbadmin') %}
-{% set vertica_group = salt['pillar.get']('vertica_group', 'verticadba') %}
-{% set vertica_user_home = salt['pillar.get']('vertica_user_home', '/home/' + vertica_user) %}
-{% set tech_user = salt['pillar.get']('tech_user', 'tech_user') %}
-{% set tech_user_home = salt['pillar.get']('tech_user_home', '/home/' + tech_user) %}
+{% from "vertica/map.jinja" import options with context %}
+{% from "vertica/map.jinja" import data_dir with context %}
+{% from "vertica/map.jinja" import dbadmin_passwd with context %}
+{% from "vertica/map.jinja" import vertica_user with context %}
+{% from "vertica/map.jinja" import vertica_group with context %}
+{% from "vertica/map.jinja" import vertica_user_home with context %}
+{% from "vertica/map.jinja" import tech_user with context %}
+{% from "vertica/map.jinja" import tech_user_home with context %}
 
 #1
 Check Requirements:
   salt.state:
-    - sls: setups.vertica.prerequisites
+    - sls: setups.vertica.requirements
     - tgt: 'roles:vertica_*'
     - tgt_type: grain
     - pillar:
@@ -22,7 +21,7 @@ Check Requirements:
 #2
 generate_ssh_key:
   salt.state:
-    - sls: setups.vertica.prerequisites.ssh_keygen
+    - sls: setups.vertica.requirements.generate_ssh_key
     - tgt: 'roles:vertica_init'
     - tgt_type: grain
     - require:
@@ -33,7 +32,7 @@ generate_ssh_key:
 
 Refresh Mine functions:
     salt.state:
-    - sls: setups.vertica.prerequisites.refresh
+    - sls: setups.vertica.requirements.mine_refresh
     - tgt: 'roles:vertica_*'
     - tgt_type: grain
     - require:
@@ -42,7 +41,7 @@ Refresh Mine functions:
 #3
 Propagate ssh-key on all host for passwordless setup:
   salt.state:
-    - sls: setups.vertica.prerequisites.ssh_key
+    - sls: setups.vertica.requirements.propagate_ssh_key
     - tgt: 'roles:vertica_node'
     - tgt_type: grain
     - require:
@@ -54,7 +53,7 @@ Propagate ssh-key on all host for passwordless setup:
 #4
 Install Vertica from one node and propagate it on all nodes:
   salt.state:
-    - sls: setups.vertica.cluster.9_1_0-0.orchestration.install_vertica
+    - sls: setups.vertica.orchestration.install_vertica
     - tgt: 'roles:vertica_init'
     - tgt_type: grain
     - require:
@@ -72,7 +71,7 @@ Install Vertica from one node and propagate it on all nodes:
 #5
 Check for data dir:
   salt.state:
-    - sls: setups.vertica.cluster.9_1_0-0.orchestration.check_data_dir
+    - sls: setups.vertica.orchestration.check_data_dir
     - tgt: 'roles:vertica_*'
     - tgt_type: grain
     - require:
@@ -85,16 +84,20 @@ Check for data dir:
 #6
 Create Vertica Database:
   salt.state:
-    - sls: setups.vertica.cluster.9_1_0-0.orchestration.create_database
+    - sls: setups.vertica.orchestration.create_database
     - tgt: 'roles:vertica_init'
     - tgt_type: grain
+    - pillar:
+        vertica_user: {{ vertica_user }}
+        dbadmin_passwd: {{ dbadmin_passwd }}
+        vertica_db: {{ vertica_db }}
     - require:
       - salt: Check for data dir
 
 #7
 Cleanup:
   salt.state:
-    - sls: setups.vertica.cluster.9_1_0-0.orchestration.cleanup
+    - sls: setups.vertica.orchestration.cleanup
     - tgt: 'roles:vertica_*'
     - tgt_type: grain
     - require:

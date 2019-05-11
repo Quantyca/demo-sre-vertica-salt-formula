@@ -1,8 +1,7 @@
-{% set timezone = salt['pillar.get']('timezone', 'Europe/Rome') %}
-{% set dev = pillar['dev'] %}
-{% set fstype = salt['disk.fstype'](dev) %}
-{% set tech_user = salt['pillar.get']('tech_user', 'tech_user') %}
-{% set tech_user_home = salt['pillar.get']('tech_user_home', '/home/' + tech_user) %}
+{% from "vertica/map.jinja" import pkgs with context %}
+{% from "vertica/map.jinja" import requirements with context %}
+{% from "vertica/map.jinja" import tech_user with context %}
+{% from "vertica/map.jinja" import tech_user_home with context %}
 
 #1 - Verifica e Installazione prerequisiti
 #
@@ -19,22 +18,9 @@ Set Swappiness to 1:
 Check if all needed packages are installed:
   pkg.installed:
     - pkgs:
-      - openssh
-      - bash
-      - sudo
-      - policycoreutils-python
-      - selinux-policy-targeted
-      - tuned
-      - mcelog
-      - sysstat
-      - dialog
-      - gdb
-{% if grains['osmajorrelease'] == 7 %}
-      - chrony
-      - gdb
-{% else %}
-      - ntp
-{% endif %}
+{% for pkg in pkgs %}
+      - {{ pkg }}
+{% endfor %}
 
 #1.4 Check Filesystem Type
 {% if fstype == 'ext4' %}
@@ -59,13 +45,13 @@ echo Swap Size OK, {{ specs['size'] }}:
 {% endfor %}
 
 #1.6
-{% if not salt['disk.dump'](dev)['getra'] | int > 4095 %}
+{% if not salt['disk.dump'](requirements.dev)['getra'] | int > 4095 %}
 Set Disk Read Ahead:
   blockdev.tuned:
-    - name: {{ dev }}
+    - name: {{ requirements.dev }}
     - read-ahead: 4096
 {% else %}
-echo Read ahead OK, {{ salt['disk.dump'](dev)['getra'] }}:
+echo Read ahead OK, {{ salt['disk.dump'](requirements.dev)['getra'] }}:
   cmd.run
 {% endif %}
 
@@ -102,11 +88,11 @@ Check if rc.local file has requirements:
     - text: |
         # Added by Salt
         # I/O Scheduler
-        {%- if 'mapper' in dev %}
-        {%- set dev_for_scheduler = salt['cmd.run']("lsblk | grep -B 1 "+ dev.split('/')[-1] +" | head -1 | awk '{print $1}' | sed 's/[0-9]*//g'", python_shell=True) %}
+        {%- if 'mapper' in requirements.dev %}
+        {%- set dev_for_scheduler = salt['cmd.run']("lsblk | grep -B 1 "+ requirements.dev.split('/')[-1] +" | head -1 | awk '{print $1}' | sed 's/[0-9]*//g'", python_shell=True) %}
         echo deadline > /sys/block/{{ dev_for_scheduler|replace('-', '')|replace('`','') }}/queue/scheduler
         {%- else %}
-        echo deadline > /sys/block/{{ dev.split('/')[-1].strip('0123456789 ') }}/queue/scheduler
+        echo deadline > /sys/block/{{ requirements.dev.split('/')[-1].strip('0123456789 ') }}/queue/scheduler
         {%- endif %}
 
         {%- if grains['osmajorrelease'] == 7 %}
@@ -150,7 +136,7 @@ Run prerequisites bootstrap:
 #1.14
 Set Timezone to:
   timezone.system:
-    - name: {{ timezone }}
+    - name: {{ requirements.timezone }}
 
 Create Tech User:
   user.present:

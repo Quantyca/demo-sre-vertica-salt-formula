@@ -1,16 +1,16 @@
 ### What is this repository for? ###
 
 * Vagrant Multi Instance:
-  * Vertica Community Edition Tree Node Cluster
+    * Vertica Community Edition Tree Node Cluster
 * Tested on 9.1.1
 
 ### Prerequisites  ###
 
 1. Centos 7 box (virtualbox, 1811.01)
 2. Vagrant installed and following plugin:
-    * vagrant plugin install vagrant-vbguest
+      * vagrant plugin install vagrant-vbguest
 3. Vertica RPM. Click on following link to register and proceed to download:
-    * https://www.vertica.com/log-in/?redirect_to=https%3A%2F%2Fwww.vertica.com%2Fdownload%2Fvertica%2Fcommunity-edition%2F
+      * https://www.vertica.com/log-in/?redirect_to=https%3A%2F%2Fwww.vertica.com%2Fdownload%2Fvertica%2Fcommunity-edition%2F
 
 ### How do I get set up? ###
 
