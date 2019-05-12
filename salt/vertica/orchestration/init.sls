@@ -32,6 +32,7 @@ generate_ssh_key:
         tech_user: {{ tech_user }}
         tech_user_home: {{ tech_user_home }}
 
+#3
 Refresh Mine functions:
     salt.state:
     - sls: vertica.requirements.mine_refresh
@@ -40,7 +41,7 @@ Refresh Mine functions:
     - require:
       - salt: generate_ssh_key
 
-#3
+#4
 Propagate ssh-key on all host for passwordless setup:
   salt.state:
     - sls: vertica.requirements.propagate_ssh_key
@@ -52,8 +53,8 @@ Propagate ssh-key on all host for passwordless setup:
         tech_user: {{ tech_user }}
         tech_user_home: {{ tech_user_home }}
 
-#4
-Install Vertica from one node and propagate it on all nodes:
+#5
+Install Vertica:
   salt.state:
     - sls: vertica.orchestration.install_vertica
     - tgt: 'roles:vertica_init'
@@ -70,20 +71,20 @@ Install Vertica from one node and propagate it on all nodes:
         vertica_user_home: {{ vertica_user_home }}
         vertica_group: {{ vertica_group }}
 
-#5
+#6
 Check for data dir:
   salt.state:
     - sls: vertica.orchestration.check_data_dir
     - tgt: 'roles:vertica_*'
     - tgt_type: grain
     - require:
-      - salt: Install Vertica from one node and propagate it on all nodes
+      - salt: Install Vertica
     - pillar:
         data_dir: {{ data_dir }}
         vertica_user: {{ vertica_user }}
         vertica_user_home: {{ vertica_user_home }}
 
-#6
+#7
 Create Vertica Database:
   salt.state:
     - sls: vertica.orchestration.create_database
@@ -96,7 +97,7 @@ Create Vertica Database:
     - require:
       - salt: Check for data dir
 
-#7
+#8
 Cleanup:
   salt.state:
     - sls: vertica.orchestration.cleanup

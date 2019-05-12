@@ -1,8 +1,8 @@
 ### What is this repository for? ###
 
 * Vagrant Multi Instance:
-    * Vertica Community Edition Tree Node Cluster
-* Tested on 9.1.1
+    * Vertica Community Edition Three Node Cluster
+* Tested on 9.2.1
 
 ### Prerequisites  ###
 
@@ -14,7 +14,7 @@
 
 ### How do I get set up? ###
 
-Download the Vertica CE software and put it in **salt/setups/vertica/packages** folder renaming it in **vertica.rpm**.
+Download the Vertica CE software and put it in **salt/vertica/packages** folder renaming it in **vertica.rpm**.
 
 Then run:
 ```bash
@@ -31,8 +31,8 @@ At the end of the bootstrap you can connect to the cluster via Sql Client, e.g [
 
 * JDBC Connection: jdbc:vertica://192.168.99.3:5433/vertica
 * Credentials:
-  * username: dbadmin
-  * password: Vertica123!
+    * username: dbadmin
+    * password: Vertica123!
 
 ### See also ###
 
