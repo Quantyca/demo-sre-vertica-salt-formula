@@ -32,7 +32,7 @@ At the end of the bootstrap you can connect to the cluster via Sql Client, e.g [
 * JDBC Connection: jdbc:vertica://192.168.99.3:5433/vertica
 * Credentials:
     * username: dbadmin
-    * password: Vertica123!
+    * password: Vertica!
 
 ### See also ###
 
