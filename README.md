@@ -7,8 +7,9 @@
 ### Prerequisites  ###
 
 1. Centos 7 box (virtualbox, 1811.01)
-2. Vagrant installed and following plugin:
+2. Vagrant installed and following plugins:
       * vagrant plugin install vagrant-vbguest
+      * vagrant plugin install vagrant-hostmanager
 3. Vertica RPM. Click on following link to register and proceed to download:
       * https://www.vertica.com/log-in/?redirect_to=https%3A%2F%2Fwww.vertica.com%2Fdownload%2Fvertica%2Fcommunity-edition%2F
 

@@ -8,6 +8,10 @@
 
 Vagrant.configure("2") do |config|
 
+  config.hostmanager.enabled = true
+  config.hostmanager.manage_host = true
+  config.hostmanager.manage_guest = true
+
   config.vm.define "vertica01" do |vertica01|
     vertica01.vm.box = "centos/7"
     vertica01.vm.box_version = "1811.01"
@@ -16,8 +20,7 @@ Vagrant.configure("2") do |config|
       vb.memory = "1024"
       vb.name = "vertica01"
     end
-    vertica01.vm.synced_folder ".", "/shared"
-    vertica01.vm.synced_folder "./salt", "/srv/salt/"
+    vertica01.vbguest.auto_update = false
     vertica01.vm.synced_folder '.', '/vagrant', disabled: true
     vertica01.vm.provision :salt do |salt|
         salt.minion_config = "vagrant/config/minion1"
@@ -40,8 +43,7 @@ Vagrant.configure("2") do |config|
       vb.memory = "1024"
       vb.name = "vertica02"
     end
-    vertica02.vm.synced_folder ".", "/shared"
-    vertica02.vm.synced_folder "./salt", "/srv/salt/"
+    vertica02.vbguest.auto_update = false
     vertica02.vm.synced_folder '.', '/vagrant', disabled: true
     vertica02.vm.provision :salt do |salt|
         salt.minion_config = "vagrant/config/minion2"
