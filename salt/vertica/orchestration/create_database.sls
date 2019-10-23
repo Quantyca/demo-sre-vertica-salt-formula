@@ -3,7 +3,7 @@
 {% from "vertica/map.jinja" import vertica_db with context %}
 
 {% set flat_list = [] %}
-{% for sublist in salt['mine.get']('roles:vertica_*','vertica-addrs', 'grain').values() %}
+{% for sublist in salt['mine.get']('I@role:vertica_init or I@role:vertica_node','vertica-addrs', 'compound').values() %}
   {% for item in sublist %}
     {% do flat_list.append(item) %}
   {% endfor %}

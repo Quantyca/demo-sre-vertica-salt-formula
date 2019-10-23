@@ -5,7 +5,7 @@ Create ssh directory if doesn't exists:
   file.directory:
     - name: {{ tech_user_home }}/.ssh
 
-{% for user, key in salt['mine.get']('roles:vertica_init','vertica_init_pubkey', 'grain').iteritems() %}
+{% for user, key in salt['mine.get']('role:vertica_init','vertica_init_pubkey', 'pillar').iteritems() %}
 Set Vertica Init node pubkey in authorization file on minions:
   ssh_auth.present:
     - name: {{ key[tech_user]['id_rsa.pub'] }}

@@ -13,8 +13,8 @@
 Check Requirements:
   salt.state:
     - sls: vertica.requirements
-    - tgt: 'roles:vertica_*'
-    - tgt_type: grain
+    - tgt: 'role:vertica_*'
+    - tgt_type: pillar
     - pillar:
         dev: {{ dev }}
         tech_user: {{ tech_user }}
@@ -24,8 +24,8 @@ Check Requirements:
 generate_ssh_key:
   salt.state:
     - sls: vertica.requirements.generate_ssh_key
-    - tgt: 'roles:vertica_init'
-    - tgt_type: grain
+    - tgt: 'role:vertica_init'
+    - tgt_type: pillar
     - require:
       - salt: Check Requirements
     - pillar:
@@ -36,8 +36,8 @@ generate_ssh_key:
 Refresh Mine functions:
     salt.state:
     - sls: vertica.requirements.mine_refresh
-    - tgt: 'roles:vertica_*'
-    - tgt_type: grain
+    - tgt: 'role:vertica_*'
+    - tgt_type: pillar
     - require:
       - salt: generate_ssh_key
 
@@ -45,8 +45,8 @@ Refresh Mine functions:
 Propagate ssh-key on all host for passwordless setup:
   salt.state:
     - sls: vertica.requirements.propagate_ssh_key
-    - tgt: 'roles:vertica_node'
-    - tgt_type: grain
+    - tgt: 'role:vertica_*'
+    - tgt_type: pillar
     - require:
       - salt: Refresh Mine functions
     - pillar:
@@ -57,8 +57,8 @@ Propagate ssh-key on all host for passwordless setup:
 Install Vertica:
   salt.state:
     - sls: vertica.orchestration.install_vertica
-    - tgt: 'roles:vertica_init'
-    - tgt_type: grain
+    - tgt: 'role:vertica_init'
+    - tgt_type: pillar
     - require:
       - salt: Propagate ssh-key on all host for passwordless setup
     - pillar:
@@ -75,8 +75,8 @@ Install Vertica:
 Check for data dir:
   salt.state:
     - sls: vertica.orchestration.check_data_dir
-    - tgt: 'roles:vertica_*'
-    - tgt_type: grain
+    - tgt: 'role:vertica_*'
+    - tgt_type: pillar
     - require:
       - salt: Install Vertica
     - pillar:
@@ -88,8 +88,8 @@ Check for data dir:
 Create Vertica Database:
   salt.state:
     - sls: vertica.orchestration.create_database
-    - tgt: 'roles:vertica_init'
-    - tgt_type: grain
+    - tgt: 'role:vertica_init'
+    - tgt_type: pillar
     - pillar:
         vertica_user: {{ vertica_user }}
         dbadmin_passwd: {{ dbadmin_passwd }}
@@ -101,8 +101,8 @@ Create Vertica Database:
 Cleanup:
   salt.state:
     - sls: vertica.orchestration.cleanup
-    - tgt: 'roles:vertica_*'
-    - tgt_type: grain
+    - tgt: 'role:vertica_*'
+    - tgt_type: pillar
     - require:
       - salt: Create Vertica Database
     - pillar:

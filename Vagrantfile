@@ -15,6 +15,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "vertica01" do |vertica01|
     vertica01.vm.box = "centos/7"
     vertica01.vm.box_version = "1811.01"
+    vertica01.vm.hostname = "vertica01"
     vertica01.vm.network "private_network", ip: "192.168.99.2"
     vertica01.vm.provider "virtualbox" do |vb|
       vb.memory = "1024"
@@ -23,8 +24,9 @@ Vagrant.configure("2") do |config|
     vertica01.vbguest.auto_update = false
     vertica01.vm.synced_folder '.', '/vagrant', disabled: true
     vertica01.vm.provision :salt do |salt|
-        salt.minion_config = "vagrant/config/minion1"
-        salt.minion_id = vertica01
+        salt.minion_config = "vagrant/config/minion"
+        salt.minion_id = "vertica01"
+        salt.bootstrap_options = "-A vertica03"
         salt.masterless = true
         salt.run_highstate = false
         salt.verbose = true
@@ -38,6 +40,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "vertica02" do |vertica02|
     vertica02.vm.box = "centos/7"
     vertica02.vm.box_version = "1811.01"
+    vertica02.vm.hostname = "vertica02"
     vertica02.vm.network "private_network", ip: "192.168.99.3"
     vertica02.vm.provider "virtualbox" do |vb|
       vb.memory = "1024"
@@ -46,8 +49,9 @@ Vagrant.configure("2") do |config|
     vertica02.vbguest.auto_update = false
     vertica02.vm.synced_folder '.', '/vagrant', disabled: true
     vertica02.vm.provision :salt do |salt|
-        salt.minion_config = "vagrant/config/minion2"
-        salt.minion_id = vertica02
+        salt.minion_config = "vagrant/config/minion"
+        salt.minion_id = "vertica02"
+        salt.bootstrap_options = "-A vertica03"
         salt.masterless = true
         salt.run_highstate = false
         salt.verbose = true
@@ -61,6 +65,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "vertica03" do |vertica03|
     vertica03.vm.box = "centos/7"
     vertica03.vm.box_version = "1811.01"
+    vertica03.vm.hostname = "vertica03"
     vertica03.vm.network "private_network", ip: "192.168.99.4"
     vertica03.vm.provider "virtualbox" do |vb|
       vb.memory = "1024"
@@ -71,9 +76,10 @@ Vagrant.configure("2") do |config|
     vertica03.vm.synced_folder "./pillar", "/srv/pillar/"
     vertica03.vm.synced_folder '.', '/vagrant', disabled: true
     vertica03.vm.provision :salt do |salt|
-        salt.minion_config = "vagrant/config/minion3"
+        salt.minion_config = "vagrant/config/minion"
         salt.master_config = "vagrant/config/master"
-        salt.minion_id = vertica03
+        salt.minion_id = "vertica03"
+        salt.bootstrap_options = "-A vertica03"
         salt.install_master = true
         salt.verbose = true
         salt.colorize = true
