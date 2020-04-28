@@ -13,8 +13,8 @@ Vagrant.configure("2") do |config|
   config.hostmanager.manage_guest = true
 
   config.vm.define "vertica01" do |vertica01|
-    vertica01.vm.box = "centos/7"
-    vertica01.vm.box_version = "1811.01"
+    vertica01.vm.box = "generic/centos7"
+#    vertica01.vm.box_version = "1811.01"
     vertica01.vm.hostname = "vertica01"
     vertica01.vm.network "private_network", ip: "192.168.99.2"
     vertica01.vm.provider "virtualbox" do |vb|
@@ -38,8 +38,8 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.define "vertica02" do |vertica02|
-    vertica02.vm.box = "centos/7"
-    vertica02.vm.box_version = "1811.01"
+    vertica02.vm.box = "generic/centos7"
+#    vertica02.vm.box_version = "1811.01"
     vertica02.vm.hostname = "vertica02"
     vertica02.vm.network "private_network", ip: "192.168.99.3"
     vertica02.vm.provider "virtualbox" do |vb|
@@ -63,8 +63,8 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.define "vertica03" do |vertica03|
-    vertica03.vm.box = "centos/7"
-    vertica03.vm.box_version = "1811.01"
+    vertica03.vm.box = "generic/centos7"
+#    vertica03.vm.box_version = "1811.01"
     vertica03.vm.hostname = "vertica03"
     vertica03.vm.network "private_network", ip: "192.168.99.4"
     vertica03.vm.provider "virtualbox" do |vb|

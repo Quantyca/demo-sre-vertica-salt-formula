@@ -25,7 +25,7 @@ Check if all needed packages are installed:
 {% endfor %}
 
 #1.4 Check Filesystem Type
-{% if fstype == 'ext4' %}
+{# {% if fstype == 'ext4' %}
 echo File system is OK, {{ fstype }}:
   cmd.run
 {% else %}
@@ -33,6 +33,7 @@ damn, File System is not ext4 but {{ fstype }}:
   cmd.run:
     - failhard: True
 {% endif %}
+#}
 
 #1.5 Check if Swap is > 2Gb
 {% for devs, specs in salt['mount.swaps']().iteritems() %}

@@ -6,7 +6,7 @@
 
 ### Prerequisites  ###
 
-1. Centos 7 box (virtualbox, 1811.01)
+1. Centos 7 box (virtualbox, latest)
 2. Vagrant installed and following plugins:
       * vagrant plugin install vagrant-vbguest
       * vagrant plugin install vagrant-hostmanager

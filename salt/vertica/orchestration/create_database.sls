@@ -11,7 +11,7 @@
 
 Create Database:
   cmd.run:
-    - name: su - {{vertica_user}} -c "/opt/vertica/bin/admintools -t create_db -d {{vertica_db}} -p '{{dbadmin_passwd}}' -s {{ ','.join(flat_list |sort) }}"
+    - name: su - {{vertica_user}} -c "/opt/vertica/bin/admintools -t create_db -d {{vertica_db}} -p '{{dbadmin_passwd}}' -s {{ ','.join(flat_list |sort) }} --skip-fs-checks"
 
 Set restart policy to always:
   cmd.run:

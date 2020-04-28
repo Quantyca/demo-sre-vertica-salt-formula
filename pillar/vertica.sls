@@ -8,3 +8,4 @@ mine_functions:
     mine_function: ssh.user_keys
     user: tech_user
 
+options: --failure-threshold NONE
