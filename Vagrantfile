@@ -8,13 +8,14 @@
 
 Vagrant.configure("2") do |config|
 
+  # HostManager config
   config.hostmanager.enabled = true
   config.hostmanager.manage_host = true
   config.hostmanager.manage_guest = true
 
+  # Salt Minion 01
   config.vm.define "vertica01" do |vertica01|
     vertica01.vm.box = "generic/centos7"
-#    vertica01.vm.box_version = "1811.01"
     vertica01.vm.hostname = "vertica01"
     vertica01.vm.network "private_network", ip: "192.168.99.2"
     vertica01.vm.provider "virtualbox" do |vb|
@@ -23,23 +24,21 @@ Vagrant.configure("2") do |config|
     end
     vertica01.vbguest.auto_update = false
     vertica01.vm.synced_folder '.', '/vagrant', disabled: true
+    vertica01.vm.provision "shell", inline: "systemctl stop firewalld; systemctl disable firewalld;"
     vertica01.vm.provision :salt do |salt|
-        salt.minion_config = "vagrant/config/minion"
+        salt.bootstrap_options = '-A vertica03'
         salt.minion_id = "vertica01"
-        salt.bootstrap_options = "-A vertica03"
         salt.masterless = true
         salt.run_highstate = false
         salt.verbose = true
         salt.colorize = true
         salt.log_level = "info"
-        salt.minion_key = "vagrant/pki/vertica01.pem"
-        salt.minion_pub = "vagrant/pki/vertica01.pub"
     end
   end
 
+  # Salt Minion 02
   config.vm.define "vertica02" do |vertica02|
     vertica02.vm.box = "generic/centos7"
-#    vertica02.vm.box_version = "1811.01"
     vertica02.vm.hostname = "vertica02"
     vertica02.vm.network "private_network", ip: "192.168.99.3"
     vertica02.vm.provider "virtualbox" do |vb|
@@ -48,23 +47,21 @@ Vagrant.configure("2") do |config|
     end
     vertica02.vbguest.auto_update = false
     vertica02.vm.synced_folder '.', '/vagrant', disabled: true
+    vertica02.vm.provision "shell", inline: "systemctl stop firewalld; systemctl disable firewalld;"
     vertica02.vm.provision :salt do |salt|
-        salt.minion_config = "vagrant/config/minion"
+        salt.bootstrap_options = '-A vertica03'
         salt.minion_id = "vertica02"
-        salt.bootstrap_options = "-A vertica03"
         salt.masterless = true
         salt.run_highstate = false
         salt.verbose = true
         salt.colorize = true
         salt.log_level = "info"
-        salt.minion_key = "vagrant/pki/vertica02.pem"
-        salt.minion_pub = "vagrant/pki/vertica02.pub"
     end
   end
 
+  # Salt Minion 03
   config.vm.define "vertica03" do |vertica03|
     vertica03.vm.box = "generic/centos7"
-#    vertica03.vm.box_version = "1811.01"
     vertica03.vm.hostname = "vertica03"
     vertica03.vm.network "private_network", ip: "192.168.99.4"
     vertica03.vm.provider "virtualbox" do |vb|
@@ -76,21 +73,15 @@ Vagrant.configure("2") do |config|
     vertica03.vm.synced_folder "./pillar", "/srv/pillar/"
     vertica03.vm.synced_folder '.', '/vagrant', disabled: true
     vertica03.vm.provision :salt do |salt|
-        salt.minion_config = "vagrant/config/minion"
-        salt.master_config = "vagrant/config/master"
+        salt.bootstrap_options = '-J \'{"auto_accept": true}\' -A vertica03'
         salt.minion_id = "vertica03"
-        salt.bootstrap_options = "-A vertica03"
         salt.install_master = true
         salt.verbose = true
         salt.colorize = true
         salt.log_level = "info"
-        salt.master_key = "vagrant/pki/master.pem"
-        salt.master_pub = "vagrant/pki/master.pub"
-        salt.minion_key = "vagrant/pki/vertica03.pem"
-        salt.minion_pub = "vagrant/pki/vertica03.pub"
         salt.run_highstate = false
     end
-    vertica03.vm.provision "shell", inline: "echo Sleep for a while to keep salt-minion alive;sleep 60; salt '*' test.ping || sleep 60"
+    vertica03.vm.provision "shell", inline: "systemctl stop firewalld; systemctl disable firewalld; echo Sleep for a while to keep salt-minion alive;sleep 60; salt '*' test.ping || sleep 60"
     vertica03.vm.provision :salt do |salt1|
         salt1.install_master = true
         salt1.no_minion = true
